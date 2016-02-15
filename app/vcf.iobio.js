@@ -93,10 +93,10 @@ vcfiobio = function module() {
         "Y":   +59373566
       };
 
-  //var vcfstatsAliveServer    = "ws://localhost:7070";
-  //var tabixServer            = "ws://localhost:7090";
-  //var vcfReadDeptherServer   = "ws://localhost:7062";
-  //var emailServer            = "ws://localhost:7068";
+  var vcfstatsAliveServer    = "ws://localhost:7070";
+  var tabixServer            = "ws://localhost:7090";
+  var vcfReadDeptherServer   = "ws://localhost:7062";
+  var emailServer            = "ws://localhost:7068";
   //var catInputServer         = "ws://localhost:7063";
 
   // var vcfstatsAliveServer    = "wss://vcfstatsalive.iobio.io";
@@ -105,10 +105,10 @@ vcfiobio = function module() {
   // var emailServer            = "ws://localhost:7068";
   // var catInputServer         = "ws://localhost:7063";
 
-  var vcfstatsAliveServer    = "wss://services.iobio.io/vcfstatsalive/";
-  var tabixServer            = "wss://services.iobio.io/tabix/";
-  var vcfReadDeptherServer   = "wss://services.iobio.io/vcfdepther/";
-  var emailServer            = "wss://services.iobio.io/localhost:7068";
+  //var vcfstatsAliveServer    = "wss://services.iobio.io/vcfstatsalive/";
+  //var tabixServer            = "wss://services.iobio.io/tabix/";
+  //var vcfReadDeptherServer   = "wss://services.iobio.io/vcfdepther/";
+  //var emailServer            = "wss://services.iobio.io/localhost:7068";
   var catInputServer         = "wss://services.iobio.io/localhost:7063";
 
   var vcfURL;
@@ -342,7 +342,7 @@ vcfiobio = function module() {
     sourceType = SOURCE_TYPE_URL;
 
     var client = BinaryClient(vcfReadDeptherServer);
-    var url = encodeURI( vcfReadDeptherServer + '?cmd= -i ' + vcfURL + ".tbi");
+    var url = encodeURI( vcfReadDeptherServer + '?cmd= -i ' + vcfURL.replace(',','') + ".tbi");
 
     client.on('open', function(stream){
       var stream = client.createStream({event:'run', params : {'url':url}});
@@ -556,10 +556,12 @@ vcfiobio = function module() {
 
       // New local file streaming
       stream.on('createClientConnection', function(connection) {
-        console.log('got create client request');
+        console.log('got create client request url: '+url);
         var ended = 0;
-        var dataClient = BinaryClient('ws://' + connection.serverAddress);
+        var dataClient = BinaryClient(server);
+
         dataClient.on('open', function() {
+	  console.log("ConnectionID: "+ connection.id)
           var dataStream = dataClient.createStream({event:'clientConnected', 'connectionID' : connection.id});
 
           var onGetRecords = function(records) {

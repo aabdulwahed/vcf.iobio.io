@@ -579,7 +579,6 @@ function loadGenomeVariantDensityData(ref, i) {
 
 
 function loadStats(i) {
-
 	d3.select("#total-reads").select("#value").text(0);
 
 	d3.selectAll("section#middle svg").style(            "visibility", "hidden");
@@ -683,7 +682,7 @@ function renderStats(stats) {
 
 	// Alelle Frequency
 	var afObj = stats.af_hist;
-	afData = vcfiobio.jsonToArray2D(afObj);	
+	afData = vcfiobio.jsonToArray2D(afObj.afHistBins);
 	var afSelection = d3.select("#allele-freq-histogram")
 					    .datum(afData);
 	var afOptions = {outliers: true, averageLine: false};					    
